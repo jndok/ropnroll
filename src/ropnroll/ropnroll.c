@@ -56,7 +56,7 @@ void dump_gadget(gadget_t gadget, gadget_size_t gadget_size)
 
 }
 
-uint64_t locate_gadget_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t sz)
+__attribute__((always_inline)) uint64_t locate_gadget_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t sz)
 {
     if (!map->map)
         return 0;
@@ -70,7 +70,7 @@ uint64_t locate_gadget_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t 
     return ret;
 }
 
-uint64_t *locate_gadget_group_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t sz, uint32_t occurrences)
+__attribute__((always_inline)) uint64_t *locate_gadget_group_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t sz, uint32_t occurrences)
 {
     uint64_t *arr=(uint64_t*)malloc(sizeof(uint64_t)*occurrences);
     bzero(arr, sizeof(uint64_t)*occurrences);
@@ -123,13 +123,13 @@ uint64_t locate_symbol_in_map(gadget_map_t *map, const char *sym_name)
     return 0;
 }
 
-uint64_t locate_kernel_base(gadget_map_t *map)
+__attribute__((always_inline)) uint64_t locate_kernel_base(gadget_map_t *map)
 {
     struct segment_command_64 *kernel_text=find_segment_in_map(map, SEG_TEXT);
     return kernel_text->vmaddr;
 }
 
-uint64_t kext_base_address(const char *bundle_id)
+__attribute__((always_inline)) uint64_t kext_base_address(const char *bundle_id)
 {
     return KextUnslidBaseAddress(bundle_id);
 }
