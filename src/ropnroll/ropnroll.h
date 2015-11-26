@@ -27,6 +27,7 @@
 
 #include "types.h"
 #include "macho/rnr_macho.h"
+#include "gadgets/rnr_gadgets.h"
 
 extern uint64_t KextUnslidBaseAddress(const char *KextBundleName);
 
