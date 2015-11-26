@@ -7,12 +7,12 @@ all:
 
 x64:
 	cd tests; rm -rf x64; mkdir x64; cd x64;
-	clang -m64 src/main.m src/ropnroll/ropnroll.c src/ropnroll/glue.m test.s -framework Foundation -framework IOKit -I$(CAPSTONE_PATH) -Llib/ -lcapstone.3 -o tests/x64/test
+	clang -m64 src/main.m src/ropnroll/ropnroll.c src/ropnroll/macho/rnr_macho.c src/ropnroll/glue.m test.s -framework Foundation -framework IOKit -I$(CAPSTONE_PATH) -Llib/ -lcapstone.3 -o tests/x64/test
 	cd tests/x64/; ./test;
 
 x86:
 	cd tests; rm -rf x86; mkdir x86; cd x86;
-	clang -m32 src/main.m src/ropnroll/ropnroll.c src/ropnroll/glue.m test.s -framework Foundation -framework IOKit -I$(CAPSTONE_PATH) -Llib/ -lcapstone.3 -o tests/x86/test32
+	clang -m32 src/main.m src/ropnroll/ropnroll.c src/ropnroll/macho/rnr_macho.c src/ropnroll/glue.m test.s -framework Foundation -framework IOKit -I$(CAPSTONE_PATH) -Llib/ -lcapstone.3 -o tests/x86/test32
 	cd tests/x86/; ./test32;
 
 clean:

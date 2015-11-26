@@ -17,8 +17,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <mach-o/loader.h>
-#include <mach-o/nlist.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/syscall.h>
@@ -27,20 +25,12 @@
 
 #include <capstone/capstone.h>
 
-typedef struct gadget_map {
-    void *map;
-    size_t map_size;
-} gadget_map_t;
-
-typedef const char* gadget_t;
-typedef const size_t gadget_size_t;
+#include "types.h"
+#include "macho/rnr_macho.h"
 
 extern uint64_t KextUnslidBaseAddress(const char *KextBundleName);
 
 gadget_map_t *map_file_with_path(const char *path);
-
-struct segment_command_64 *find_segment_in_map(gadget_map_t *map, const char *segname);
-struct section_64 *find_section_in_segment_in_map(struct segment_command_64 *seg, const char *sectname);
 
 uint32_t calculate_gadget_size(gadget_t gadget);
 void dump_gadget(gadget_t gadget, gadget_size_t gadget_size);

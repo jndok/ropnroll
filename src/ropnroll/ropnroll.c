@@ -29,45 +29,6 @@ gadget_map_t *map_file_with_path(const char *path)
     return map;
 }
 
-struct segment_command_64 *find_segment_in_map(gadget_map_t *map, const char *segname)
-{
-
-    struct mach_header_64 *header = (struct mach_header_64*)map->map;
-    if (header->magic != MH_MAGIC_64)
-        return NULL;
-
-    struct load_command *lcmd = ((void*)header + sizeof(struct mach_header_64));
-    for (uint32_t i=0; i<header->ncmds; ++i) {
-        if (lcmd->cmd==LC_SEGMENT_64) {
-            struct segment_command_64 *seg=(struct segment_command_64*)lcmd;
-            if (strcmp(seg->segname, segname) == 0) {
-                return seg;
-            }
-        }
-
-        lcmd = ((void*)lcmd + lcmd->cmdsize);
-    }
-
-    return NULL;
-}
-
-struct section_64 *find_section_in_segment_in_map(struct segment_command_64 *seg, const char *sectname)
-{
-    if (!seg)
-        return NULL;
-
-    struct section_64 *sec=(struct section_64*)((void*)seg+sizeof(struct segment_command_64));
-    for (uint32_t i=0; i<seg->nsects; ++i) {
-        if (strcmp(sec->sectname, sectname) == 0) {
-            return sec;
-        }
-
-        sec = ((void*)sec + sizeof(struct section_64));
-    }
-
-    return NULL;
-}
-
 uint32_t calculate_gadget_size(gadget_t gadget)
 {
     char *byte = (char*)gadget;
