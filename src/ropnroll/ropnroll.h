@@ -31,20 +31,17 @@
 
 extern uint64_t KextUnslidBaseAddress(const char *KextBundleName);
 
-gadget_map_t *map_file_with_path(const char *path);
+gadget_map_t *rnr_map_file_with_path(const char *path);
 
-uint32_t calculate_gadget_size(gadget_t gadget);
-void dump_gadget(gadget_t gadget, gadget_size_t gadget_size);
+__attribute__((always_inline)) uint64_t rnr_locate_gadget_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t sz);
+__attribute__((always_inline)) uint64_t *rnr_locate_gadget_group_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t sz, uint32_t occurrences);
+__attribute__((always_inline)) uint64_t rnr_locate_symbol_in_map(gadget_map_t *map, const char *sym_name);
 
-__attribute__((always_inline)) uint64_t locate_gadget_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t sz);
-__attribute__((always_inline)) uint64_t *locate_gadget_group_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t sz, uint32_t occurrences);
-uint64_t locate_symbol_in_map(gadget_map_t *map, const char *sym_name);
+__attribute__((always_inline)) uint64_t rnr_locate_kernel_base(gadget_map_t *map);
 
-__attribute__((always_inline)) uint64_t locate_kernel_base(gadget_map_t *map);
+__attribute__((always_inline)) uint64_t rnr_kext_base_address(const char *bundle_id);
 
-__attribute__((always_inline)) uint64_t kext_base_address(const char *bundle_id);
-
-uint64_t get_kslide(void);
-__attribute__((always_inline)) uint64_t slide_kernel_pointer(uint64_t pointer, uint64_t kslide);
+uint64_t rnr_get_kslide(void);
+__attribute__((always_inline)) uint64_t rnr_slide_kernel_pointer(uint64_t pointer, uint64_t kslide);
 
 #endif /* ropnroll_h */

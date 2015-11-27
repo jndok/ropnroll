@@ -6,12 +6,12 @@
 //  Copyright © 2015 jndok. All rights reserved.
 //
 
-#if defined(x64)
+#if defined(__x86_64__)
 .globl _test_gadget
 _test_gadget:
     pop %rax;
     ret;
-#elif defined(x86)
+#elif defined(__i386__)
 .globl _test_gadget
 _test_gadget:
   pop %eax;

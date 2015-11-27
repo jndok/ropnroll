@@ -60,4 +60,9 @@
 #define RNR_AND_RCX_RAX_POP_RBP(map) RNR_GENERIC_GADGET(map, (char*)((uint8_t[]){0x48, 0x21, 0xC8, 0x5D, 0xC3}), 5)
 #define RNR_OR_RCX_RAX_POP_RBP(map) RNR_GENERIC_GADGET(map, (char*)((uint8_t[]){0x48, 0x09, 0xC8, 0x5D, 0xC3}), 5)
 
+/***/
+
+__attribute__((always_inline)) uint32_t rnr_calculate_gadget_size(gadget_t gadget);
+__attribute__((always_inline)) void rnr_dump_gadget(gadget_t gadget, gadget_size_t gadget_size);
+
 #endif /* rnr_gadgets_h */

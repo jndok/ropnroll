@@ -11,7 +11,7 @@
 uint64_t flags=0;
 uint64_t kslide=0x0;
 
-gadget_map_t *map_file_with_path(const char *path)
+gadget_map_t *rnr_map_file_with_path(const char *path)
 {
     int fd=open(path, O_RDONLY);
     if (fd<0)
@@ -29,34 +29,7 @@ gadget_map_t *map_file_with_path(const char *path)
     return map;
 }
 
-uint32_t calculate_gadget_size(gadget_t gadget)
-{
-    char *byte = (char*)gadget;
-    uint32_t sz;
-
-    for (sz=0; *(uint8_t*)(byte+sz) != 0xc3; ++sz);
-
-    return sz+1;
-}
-
-void dump_gadget(gadget_t gadget, gadget_size_t gadget_size)
-{
-    uint32_t ret=0;
-    csh handle;
-
-    ret=cs_open(CS_ARCH_X86, CS_MODE_64, &handle);
-    if (ret!=CS_ERR_OK)
-        return;
-
-    cs_insn *insn;
-    uint64_t count = cs_disasm(handle, (uint8_t*)gadget, gadget_size, 0x0, 0, &insn);
-    for (uint32_t i=0; i<count; ++i) {
-        printf("%s %s\n", insn[i].mnemonic, insn[i].op_str);
-    }
-
-}
-
-__attribute__((always_inline)) uint64_t locate_gadget_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t sz)
+__attribute__((always_inline)) uint64_t rnr_locate_gadget_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t sz)
 {
     if (!map->map)
         return 0;
@@ -70,7 +43,7 @@ __attribute__((always_inline)) uint64_t locate_gadget_in_map(gadget_map_t *map, 
     return ret;
 }
 
-__attribute__((always_inline)) uint64_t *locate_gadget_group_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t sz, uint32_t occurrences)
+__attribute__((always_inline)) uint64_t *rnr_locate_gadget_group_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t sz, uint32_t occurrences)
 {
     uint64_t *arr=(uint64_t*)malloc(sizeof(uint64_t)*occurrences);
     bzero(arr, sizeof(uint64_t)*occurrences);
@@ -90,7 +63,7 @@ __attribute__((always_inline)) uint64_t *locate_gadget_group_in_map(gadget_map_t
     return arr;
 }
 
-uint64_t locate_symbol_in_map(gadget_map_t *map, const char *sym_name)
+__attribute__((always_inline)) uint64_t rnr_locate_symbol_in_map(gadget_map_t *map, const char *sym_name)
 {
     void *symtable=NULL, *strtable=NULL;
     uint32_t nsyms=0;
@@ -123,18 +96,18 @@ uint64_t locate_symbol_in_map(gadget_map_t *map, const char *sym_name)
     return 0;
 }
 
-__attribute__((always_inline)) uint64_t locate_kernel_base(gadget_map_t *map)
+__attribute__((always_inline)) uint64_t rnr_locate_kernel_base(gadget_map_t *map)
 {
     struct segment_command_64 *kernel_text=find_segment_in_map(map, SEG_TEXT);
     return kernel_text->vmaddr;
 }
 
-__attribute__((always_inline)) uint64_t kext_base_address(const char *bundle_id)
+__attribute__((always_inline)) uint64_t rnr_kext_base_address(const char *bundle_id)
 {
     return KextUnslidBaseAddress(bundle_id);
 }
 
-uint64_t get_kslide(void)
+uint64_t rnr_get_kslide(void)
 {
     if (getuid() != 0)
         return KSLIDE_UNKNOWN;
@@ -147,7 +120,7 @@ uint64_t get_kslide(void)
     return _kslide;
 }
 
-__attribute__((always_inline)) uint64_t slide_kernel_pointer(uint64_t pointer, uint64_t kslide)
+__attribute__((always_inline)) uint64_t rnr_slide_kernel_pointer(uint64_t pointer, uint64_t kslide)
 {
     if (kslide==KSLIDE_UNKNOWN) {
         return pointer;
