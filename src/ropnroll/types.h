@@ -9,11 +9,6 @@
 #ifndef types_h
 #define types_h
 
-typedef struct kernel_fake_stack {
-  uint32_t index;
-  uint64_t stack[4096];
-} kernel_fake_stack_t;
-
 typedef struct gadget_map {
     void *map;
     size_t map_size;
