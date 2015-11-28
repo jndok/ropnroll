@@ -22,5 +22,6 @@ __attribute__((always_inline)) struct segment_command_64 *find_segment_in_map(ga
 __attribute__((always_inline)) struct section_64 *find_section_in_segment_in_map(struct segment_command_64 *seg, const char *sectname);
 
 __attribute__((always_inline)) struct symtab_command *find_symbol_table_in_map(gadget_map_t *map);
+__attribute__((always_inline)) struct dysymtab_command *find_dynamic_symbol_table_in_map(gadget_map_t *map);
 
 #endif /* rnr_macho_h */
