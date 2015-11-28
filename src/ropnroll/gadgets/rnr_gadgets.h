@@ -18,7 +18,10 @@
 #include "../ropnroll.h"
 #include "../ropnroll_macros.h"
 
-#define RNR_GENERIC_GADGET(map, gadget, size) kslide!=KSLIDE_UNKNOWN ? RNR_SLIDE_POINTER(locate_kernel_base(map)+locate_gadget_in_map(map, gadget, size)) : locate_kernel_base(map)+locate_gadget_in_map(map, gadget, size)
+typedef const char* gadget_t;
+typedef const size_t gadget_size_t;
+
+#define RNR_GENERIC_GADGET(map, gadget, size) kslide!=KSLIDE_UNKNOWN ? RNR_SLIDE_POINTER(rnr_locate_kernel_base(map)+rnr_locate_gadget_in_map(map, gadget, size)) : rnr_locate_kernel_base(map)+rnr_locate_gadget_in_map(map, gadget, size)
 
 /* custom gadgets */
 
@@ -64,5 +67,7 @@
 
 __attribute__((always_inline)) uint32_t rnr_calculate_gadget_size(gadget_t gadget);
 __attribute__((always_inline)) void rnr_dump_gadget(gadget_t gadget, gadget_size_t gadget_size);
+__attribute__((always_inline)) uint64_t rnr_locate_gadget_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t sz);
+__attribute__((always_inline)) uint64_t *rnr_locate_gadget_group_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t sz, uint32_t occurrences);
 
 #endif /* rnr_gadgets_h */

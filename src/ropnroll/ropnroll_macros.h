@@ -14,6 +14,6 @@
 extern uint64_t kslide;
 
 #define RNR_SET_SLIDE(val) kslide=val;
-#define RNR_SLIDE_POINTER(ptr) slide_kernel_pointer(ptr, kslide)
+#define RNR_SLIDE_POINTER(ptr) rnr_slide_kernel_pointer(ptr, kslide)
 
 #endif /* ropnroll_macros_h */

@@ -29,40 +29,6 @@ gadget_map_t *rnr_map_file_with_path(const char *path)
     return map;
 }
 
-__attribute__((always_inline)) uint64_t rnr_locate_gadget_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t sz)
-{
-    if (!map->map)
-        return 0;
-
-    void *loc = memmem(map->map, map->map_size, gadget, sz);
-    if (!loc)
-        return 0;
-
-    uint64_t ret=loc-map->map;
-
-    return ret;
-}
-
-__attribute__((always_inline)) uint64_t *rnr_locate_gadget_group_in_map(gadget_map_t *map, gadget_t gadget, gadget_size_t sz, uint32_t occurrences)
-{
-    uint64_t *arr=(uint64_t*)malloc(sizeof(uint64_t)*occurrences);
-    bzero(arr, sizeof(uint64_t)*occurrences);
-
-    void *base = map->map;
-    size_t base_size=map->map_size;
-    void *p1=NULL;
-    uint64_t off=0;
-    for (uint32_t i=0; i<occurrences; ++i) {
-        p1=memmem(base+off, base_size-off, (gadget_t)gadget, sz);
-        if (p1) {
-            off=p1-base+1;
-            arr[i]=(uint64_t)(p1-(map->map));
-        }
-    }
-
-    return arr;
-}
-
 __attribute__((always_inline)) uint64_t rnr_locate_symbol_in_map(gadget_map_t *map, const char *sym_name)
 {
     void *symtable=NULL, *strtable=NULL;
