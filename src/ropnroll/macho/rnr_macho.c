@@ -64,3 +64,44 @@ __attribute__((always_inline)) struct dysymtab_command *find_dynamic_symbol_tabl
 {
     return (struct dysymtab_command *)find_load_command_in_map(map, LC_DYSYMTAB);
 }
+
+/***/
+
+struct symbol_table_head *map_symbol_table(gadget_map_t *map)
+{
+    struct symbol_table_head head = SLIST_HEAD_INITIALIZER(head);
+    struct symbol_table_head *head_p = &head;
+    struct symbol_table_entry *old=NULL;
+
+    struct mach_header_64 *header=find_mach_header_in_map(map);
+    struct symtab_command *sym_cmd=find_symbol_table_in_map(map);
+    void *symtable=(void*)header+sym_cmd->symoff;
+    void *strtable=(void*)header+sym_cmd->stroff;
+
+    struct nlist_64 *entry=(struct nlist_64*)symtable;
+
+    SLIST_INIT(&head);
+
+    for (uint32_t i=0; i<sym_cmd->nsyms; ++i) {
+        struct symbol_table_entry *curr=(struct symbol_table_entry*)malloc(sizeof(struct symbol_table_entry));
+
+        curr->sym_name=strtable+(entry->n_un.n_strx);
+        curr->n_un.n_strx=entry->n_un.n_strx;
+
+        curr->n_desc=entry->n_desc;
+        curr->n_sect=entry->n_sect;
+        curr->n_type=entry->n_type;
+        curr->n_value=entry->n_value;
+
+        if (!old) {
+            SLIST_INSERT_HEAD(&head, curr, chain);
+        } else {
+            SLIST_INSERT_AFTER(old, curr, chain);
+        }
+        old=curr;
+
+        entry = ((void*)entry + sizeof(struct nlist_64));
+    }
+
+    return head_p;
+}
