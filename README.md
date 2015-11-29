@@ -31,6 +31,13 @@ _ropnroll_ is primarily an exploitation library. So it provides a set of functio
 
 You can find various macros inside `ropnroll/gadgets/rnr_gadgets.h`. These are _direct_ gadgets, meaning you can use these macros to directly find that sequence in a `gadget_map_t`. They are already there for you!<br>You can obviously use functions like `rnr_locate_gadget_in_map` and `rnr_locate_gadget_group_in_map` to find your own byte sequences.
 
+```
+gadget_map_t *map=rnr_map_file_with_path("/System/Library/Kernels/kernel"); //map kernel
+
+char nop_gadget[] = {0x90, 0xC3};
+printf("NOP gadget @: %#llx\n", rnr_locate_kernel_base(map) + rnr_locate_gadget_in_map(map, nop_gadget, sizeof(nop_gadget)));
+```
+
 ### notes
 Thanks to [@qwertyoruiop](http://twitter.com/qwertyoruiop) for help and his swag libraries (_lsym_ and _libxnuexp_)!
 
