@@ -67,10 +67,9 @@ __attribute__((always_inline)) struct dysymtab_command *find_dynamic_symbol_tabl
 
 /***/
 
-struct symbol_table_head *map_symbol_table(gadget_map_t *map)
+struct symbol_table_head map_symbol_table(gadget_map_t *map)
 {
     struct symbol_table_head head = SLIST_HEAD_INITIALIZER(head);
-    struct symbol_table_head *head_p = &head;
     struct symbol_table_entry *old=NULL;
 
     struct mach_header_64 *header=find_mach_header_in_map(map);
@@ -103,5 +102,5 @@ struct symbol_table_head *map_symbol_table(gadget_map_t *map)
         entry = ((void*)entry + sizeof(struct nlist_64));
     }
 
-    return head_p;
+    return head;
 }

@@ -45,6 +45,6 @@ __attribute__((always_inline)) struct dysymtab_command *find_dynamic_symbol_tabl
 
 /***/
 
-struct symbol_table_head *map_symbol_table(gadget_map_t *map);
+struct symbol_table_head map_symbol_table(gadget_map_t *map);
 
 #endif /* rnr_macho_h */
